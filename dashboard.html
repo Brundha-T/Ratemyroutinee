@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RateMyRoutine - Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('bg2.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #eee;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      /* Optional overlay to improve text visibility */
+      position: relative;
+      z-index: 0;
+    }
+
+    /* Optional overlay for better text contrast */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 2.4rem;
+      margin-bottom: 30px;
+      color: #ff7e5f;
+    }
+    .task-input {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 20px;
+    }
+    .task-input input[type="text"],
+    .task-input input[type="time"] {
+      padding: 14px 18px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      width: 180px;
+    }
+    button.add-btn {
+      background: #feb47b;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #333;
+      transition: background 0.3s ease;
+    }
+    button.add-btn:hover {
+      background: #ff7e5f;
+      color: #fff;
+    }
+    ul.task-list {
+      list-style: none;
+      padding: 0;
+      max-width: 700px;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+    ul.task-list li {
+      background: #222;
+      padding: 12px 18px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    ul.task-list li button.delete-btn {
+      background: transparent;
+      border: none;
+      color: #ff5555;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    button#viewScoreBtn {
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #ff7e5f, #feb47b);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button#viewScoreBtn:hover {
+      background: linear-gradient(90deg, #feb47b, #ff7e5f);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>RateMyRoutine Dashboard</h1>
+
+  <div class="task-input">
+    <input type="text" id="taskInput" placeholder="Task Name" />
+    <input type="time" id="startTime" />
+    <input type="time" id="endTime" />
+    <button class="add-btn" id="addTaskBtn">Add</button>
+  </div>
+
+  <ul class="task-list" id="taskList"></ul>
+
+  <button id="viewScoreBtn">View Score</button>
+
+  <script>
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskInput = document.getElementById('taskInput');
+    const startTimeInput = document.getElementById('startTime');
+    const endTimeInput = document.getElementById('endTime');
+    const taskList = document.getElementById('taskList');
+    const viewScoreBtn = document.getElementById('viewScoreBtn');
+
+    let tasks = [];
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.textContent = task;
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '×';
+        delBtn.className = 'delete-btn';
+        delBtn.addEventListener('click', () => {
+          tasks.splice(index, 1);
+          renderTasks();
+        });
+        li.appendChild(delBtn);
+        taskList.appendChild(li);
+      });
+    }
+
+    addTaskBtn.addEventListener('click', () => {
+      const taskName = taskInput.value.trim();
+      const startTime = startTimeInput.value;
+      const endTime = endTimeInput.value;
+
+      if (taskName && startTime && endTime) {
+        const taskText = `${taskName} (${startTime} - ${endTime})`;
+        tasks.push(taskText);
+        taskInput.value = '';
+        startTimeInput.value = '';
+        endTimeInput.value = '';
+        renderTasks();
+      } else {
+        alert("Please fill in all fields.");
+      }
+    });
+
+    taskInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        addTaskBtn.click();
+      }
+    });
+
+    viewScoreBtn.addEventListener('click', () => {
+      sessionStorage.setItem('tasks', JSON.stringify(tasks));
+      window.location.href = 'score.html';
+    });
+  </script>
+
+</body>
+</html>

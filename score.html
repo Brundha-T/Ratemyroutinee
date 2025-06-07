@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RateMyRoutine - Score</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('bg2.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      margin: 0;
+      padding: 60px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+      z-index: 0;
+    }
+
+    /* Overlay for better contrast */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      font-weight: 700;
+    }
+
+    .score-box {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 30px 40px;
+      border-radius: 14px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .score {
+      font-size: 4rem;
+      font-weight: 900;
+      margin: 10px 0 20px;
+      color: #ffcc80;
+    }
+
+    .recommendation {
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      line-height: 1.4;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+    }
+
+    button {
+      padding: 14px 28px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button#signOutBtn {
+      background: #ff6f61;
+      color: white;
+    }
+
+    button#signOutBtn:hover {
+      background: #ff3b2d;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Your Productivity Score</h1>
+
+<div class="score-box">
+  <div class="score" id="score">--</div>
+  <div class="recommendation" id="recommendation">Loading recommendation...</div>
+  <div class="btn-group">
+    <button id="signOutBtn">Sign Out</button>
+  </div>
+</div>
+
+<script>
+  // Fetch tasks from sessionStorage
+  const tasks = JSON.parse(sessionStorage.getItem('tasks')) || [];
+
+  // Score = number of tasks completed * 10 (max 100)
+  let score = Math.min(tasks.length * 10, 100);
+
+  // Recommendation logic
+  let recommendation = '';
+  if(score >= 80) {
+    recommendation = 'Great job! Keep up the excellent productivity and maintain your routine.';
+  } else if(score >= 50) {
+    recommendation = 'Good effort! Try to add more focus and consistency to improve further.';
+  } else if(score > 0) {
+    recommendation = 'You can do better! Prioritize important tasks and avoid distractions.';
+  } else {
+    recommendation = 'No tasks added yet. Start by adding daily routines on your dashboard.';
+  }
+
+  document.getElementById('score').textContent = score + ' / 100';
+  document.getElementById('recommendation').textContent = recommendation;
+
+  document.getElementById('signOutBtn').addEventListener('click', () => {
+    sessionStorage.clear();
+    window.location.href = 'signup.html';
+  });
+</script>
+
+</body>
+</html>
